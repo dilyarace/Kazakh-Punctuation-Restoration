@@ -1,6 +1,6 @@
 <div align="center">
   
-# 🇰🇿 Kazakh Punctuation Restoration
+# Kazakh Punctuation Restoration
 **Robust NLP Pipeline for Post-ASR Text Formatting**
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
@@ -20,38 +20,46 @@ This project implements a **Token Classification model** designed to restore mis
 The end-to-end architecture demonstrates how raw, diverse domain data is collected, preprocessed, inferred, and evaluated to meet the strict whitespace-split token-matching requirements.
 
 ```mermaid
-graph TD
-    %% Section 1: Data Preparation
-    subgraph Section_1 [Data Preparation]
-        A[Raw Kazakh Text<br/>Wikipedia, News] --> B[Text Normalization<br/>Cleaning & Lowercase]
-        B --> C[Punctuation Extraction<br/>Labeling & Stripping]
-        C --> D[(Processed Dataset)]
-    end
+graph LR
+    %% Calm, minimalistic styling
+    classDef dataset fill:#f4f8f4,stroke:#a3b18a,stroke-width:1px,color:#333,rx:5px,ry:5px;
+    classDef process fill:#f0f6fa,stroke:#9db8d6,stroke-width:1px,color:#333,rx:5px,ry:5px;
+    classDef model fill:#f8f4fa,stroke:#c4a8d4,stroke-width:1px,color:#333,rx:5px,ry:5px;
 
-    %% Section 2: Model Training
-    subgraph Section_2 [Model Training]
-        D --> E[Pre-trained Transformer<br/>XLM-RoBERTa]
-        E --> F[Token Classification Head<br/>O, COMMA, PERIOD, QUESTION]
-        F --> G[Cross-Entropy Loss<br/>Class Balancing]
-        G --> H([Model Weights / Checkpoint])
-    end
+    %% Background styling for subgraphs
+    style Data_Preparation fill:none,stroke:#e5e5e5,stroke-dasharray: 4 4
+    style Model_Training fill:none,stroke:#e5e5e5,stroke-dasharray: 4 4
+    style Inference_Flow fill:none,stroke:#e5e5e5,stroke-dasharray: 4 4
 
-    %% Section 3: Inference Flow
-    subgraph Section_3 [Inference Flow]
-        I[Unpunctuated Input] --> J[Whitespace Split<br/>Tokenization]
+    %% Data Pipeline
+    subgraph Data_Preparation [Data Preparation]
+        A(Raw Kazakh Text) --> B[Text Normalization]
+        B --> C[Punctuation Extraction]
+        C --> D(Processed Dataset)
+    end
+    class A,D dataset;
+    class B,C process;
+
+    %% Training Pipeline
+    subgraph Model_Training [Model Training]
+        D --> E(Pre-trained Transformer)
+        E --> F[Classification Head]
+        F --> G[Cross-Entropy Loss]
+        G --> H[(Model Weights)]
+    end
+    class E,F,H model;
+    class G process;
+
+    %% Inference Pipeline
+    subgraph Inference_Flow [Inference Flow]
+        I(Unpunctuated Input) --> J[Whitespace Split]
         J --> K[Predict Labels]
-        H -.-> K
-        K --> L[Strict Length Check<br/>Validation]
-        L --> M[Restored Text<br/>Final Result]
+        H -.->|Load Weights| K
+        K --> L[Strict Length Check]
+        L --> M(Restored Text)
     end
-
-    %% Styling
-    style Section_1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    style Section_2 fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    style Section_3 fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
-    style D fill:#fff9c4,stroke:#fbc02d
-    style H fill:#fff9c4,stroke:#fbc02d
-    style M fill:#ffccbc,stroke:#e64a19,stroke-width:3px
+    class I,M dataset;
+    class J,K,L process;
 ```
 
 ## Task Details & Labels
