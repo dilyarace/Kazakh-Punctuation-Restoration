@@ -21,41 +21,37 @@ The end-to-end architecture demonstrates how raw, diverse domain data is collect
 
 ```mermaid
 graph TD
-    %% Base Styling
-    classDef Dataset fill:#fcfcff,stroke:#8A9A5B,stroke-width:2px,color:#333;
-    classDef Process fill:#fefefe,stroke:#4A90E2,stroke-width:2px,color:#333;
-    classDef Model fill:#f4f9fc,stroke:#8E44AD,stroke-width:2px,color:#333;
-
-    %% Data Pipeline Section
-    subgraph Data Preparation
-        A(Raw Kazakh Text) --> B[[Text Normalization]]
-        B --> C{Punctuation Extraction}
-        C -->|Mapping| D(Processed Dataset)
+    %% Section 1: Data Preparation
+    subgraph Section_1 [Data Preparation]
+        A[Raw Kazakh Text<br/>Wikipedia, News] --> B[Text Normalization<br/>Cleaning & Lowercase]
+        B --> C[Punctuation Extraction<br/>Labeling & Stripping]
+        C --> D[(Processed Dataset)]
     end
-    class A,D Dataset;
-    class B,C Process;
 
-    %% Training Pipeline Section
-    subgraph Model Training
-        D --> E(Pre-trained Transformer)
-        E --> F[Token Classification Head]
-        F --> G((Cross-Entropy Loss))
-        G --> H[(Model Weights)]
+    %% Section 2: Model Training
+    subgraph Section_2 [Model Training]
+        D --> E[Pre-trained Transformer<br/>XLM-RoBERTa]
+        E --> F[Token Classification Head<br/>O, COMMA, PERIOD, QUESTION]
+        F --> G[Cross-Entropy Loss<br/>Class Balancing]
+        G --> H([Model Weights / Checkpoint])
     end
-    class E,F,H Model;
-    class G Process;
 
-    %% Inference Section
-    subgraph Inference Flow
-        I[Unpunctuated Input] --> J[[Whitespace Split]]
-        J --> H
-        H --> K[Predict Labels]
-        K --> L{Strict Length Check}
-        L --> M[Restored Text]
+    %% Section 3: Inference Flow
+    subgraph Section_3 [Inference Flow]
+        I[Unpunctuated Input] --> J[Whitespace Split<br/>Tokenization]
+        J --> K[Predict Labels]
+        H -.-> K
+        K --> L[Strict Length Check<br/>Validation]
+        L --> M[Restored Text<br/>Final Result]
     end
-    class I,M Dataset;
-    class J,K,L Process;
-    class H Model;
+
+    %% Styling
+    style Section_1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    style Section_2 fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    style Section_3 fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
+    style D fill:#fff9c4,stroke:#fbc02d
+    style H fill:#fff9c4,stroke:#fbc02d
+    style M fill:#ffccbc,stroke:#e64a19,stroke-width:3px
 ```
 
 ## Task Details & Labels
